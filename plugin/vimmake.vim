@@ -34,10 +34,10 @@ function! VimMakeRoot(file)
 endfunction()
 
 function! VimMakeSourceInfo(file)
-	let relfile = substitute(a:file, getcwd().'/', './', '')
 	for srcdir in g:vimmake_srcdirs
-		if l:relfile =~ '/'.l:srcdir.'/'
-			let subdir = substitute(l:relfile, '/'.l:srcdir.'/.*', '', '')
+		if a:file =~ '/'.l:srcdir.'/'
+			let relfile = substitute(a:file, getcwd().'/', './', '')
+			let subdir = fnamemodify(l:relfile, '%:h')
 			return [1, l:subdir, fnamemodify(l:subdir, ':p')]
 		endif
 	endfor

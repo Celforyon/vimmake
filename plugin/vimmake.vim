@@ -35,13 +35,20 @@ endfunction()
 
 function! VimMakeSourceInfo(file)
 	for srcdir in g:vimmake_srcdirs
+		let cwd = getcwd()
+		let updir = '.'
+		while l:cwd =~ '/'.l:srcdir.'/' || l:cwd =~ '/'.l:srcdir.'$'
+			let cwd = fnamemodify(l:cwd, ':h')
+			let updir = l:updir.'/..'
+		endwhile
 		if a:file =~ '/'.l:srcdir.'/'
-			let relfile = substitute(a:file, getcwd().'/', './', '')
-			let subdir = fnamemodify(l:relfile, '%:h')
-			return [1, l:subdir, fnamemodify(l:subdir, ':p')]
+			let relfile = substitute(a:file, l:cwd.'/', './', '')
+			let subdir = substitute(l:relfile, '/'.l:srcdir.'/.*', '', '')
+			let subpath = simplify(fnamemodify(l:subdir, ':p').'/'.l:updir)
+			return [1, l:subpath]
 		endif
 	endfor
-	return [0, '', '']
+	return [0, '']
 endfunction()
 
 function! VimMakeFindMakefile(filesstr, subpath)
@@ -58,8 +65,7 @@ function! VimMakeFunction()
 	let cwd = getcwd()
 	let file = expand('%:p')
 	let srcinfo = VimMakeSourceInfo(l:file)
-	let subdir = l:srcinfo[1]
-	let subpath = l:srcinfo[2]
+	let subpath = l:srcinfo[1]
 
 	if !l:srcinfo[0]
 		echohl VimMakeWarn|echo 'Cannot make: current buffer file is not in a source directory'|echohl None
@@ -74,15 +80,11 @@ function! VimMakeFunction()
 		let makepath = fnamemodify(l:makefile, ':h')
 		silent !clear
 
-		if l:subdir != ''
-			cd `=l:subdir`
-		endif
+		cd `=l:subpath`
 		silent execute 'make -C"'.l:makepath.'" '.g:vimmake_options
 		redraw!
 		botright cwindow
-		if l:subdir != ''
-			cd `=l:cwd`
-		endif
+		cd `=l:cwd`
 		echohl VimMakeDone|echo 'Compilation completed'|echohl None
 	else
 		echohl VimMakeWarn|echo 'Cannot make: no Makefile found'|echohl None

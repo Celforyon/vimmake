@@ -1,0 +1,73 @@
+vimmake.txt   Utility to simplify usage of make
+
+Author: Alexis Pereda
+License: GPLv3
+
+==============================================================================
+CONTENTS                                                             *vimmake*
+
+	Introduction  |vimmake-introduction|
+	Usage         |vimmake-usage|
+	Requirements  |vimmake-requirements|
+	Variables     |vimmake-variables|
+	Highlight     |vimmake-highlight|
+	License       |vimmake-license|
+
+==============================================================================
+                                                        *vimmake-introduction*
+Introduction
+
+This plugin mainly provides the *Make* command, or *VimMakeFunction* function.
+It simplifies the usage of make by determining where is the Makefile and which
+Makefile is to be utilized whenever multiple are found, depending on the
+file open in the current buffer.
+
+==============================================================================
+                                                               *vimmake-usage*
+Usage
+
+:*Make* will call *VimMakeFunction*.
+
+Possible errors:
+- no Makefile found
+- buffer file not in a valid source directory
+
+==============================================================================
+																											  *vimmake-requirements*
+Requirements
+
+- Makefile or makefile available
+- file open in the current buffer
+This file must be in one of the subdirectories specified in 
+*g:vimmake_srcdirs*
+
+Optionally:
+- git binaries
+- being in a git repository
+
+==============================================================================
+																												   *vimmake-variables*
+Variables
+
+- *g:vimmake_options* (default: '-j4')
+Options to pass to the make program
+
+- *g:vimmake_srcdirs* (default: ['src'])
+List of valid source directories
+
+==============================================================================
+																												   *vimmake-highlight*
+Highlight
+
+- *VimMakeDone*
+used for information messages
+
+- *VimMakeWarn*
+used for warning messages
+links to WarningMsg
+
+==============================================================================
+																														 *vimmake-license*
+License
+
+This software is licensed under the GPL v3 license

@@ -15,7 +15,7 @@ CONTENTS                                                             *vimmake*
 ==============================================================================
 Introduction                                            *vimmake-introduction*
 
-This plugin mainly provides the `:Make` command, or `VimMakeFunction` function.
+This plugin mainly provides the `:Make` command.
 It simplifies the usage of make by determining where is the Makefile and which
 Makefile is to be utilized whenever multiple are found, depending on the
 file open in the current buffer.
@@ -27,7 +27,7 @@ The main command is: >
 	:Make
 <
 which actually executes: >
-	:call VimMakeFunction()
+	:call vimmake#function()
 <
 
 Possible errors:

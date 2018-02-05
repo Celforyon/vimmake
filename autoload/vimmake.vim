@@ -1,3 +1,13 @@
+"""""""""""""""" Variables """"""""""""""""""""""""""""
+
+let s:tmp_file = ''
+let s:last_file = ''
+let s:cwd = ''
+let s:subpath = ''
+
+let s:vimcmd  = 'vim --servername "'.v:servername.'" --remote-expr "vimmake\#done()"'
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Functions """"""""""""""""""""""""""""
 
 function! vimmake#root(file)
@@ -36,7 +46,7 @@ function! vimmake#findmakefile(filesstr, subpath)
 	return l:makefiles[0]
 endfunction()
 
-function! vimmake#function()
+function! vimmake#getmakeinfo()
 	let cwd = getcwd()
 	let file = expand('%:p')
 	let srcinfo = vimmake#sourceinfo(l:file)
@@ -44,7 +54,7 @@ function! vimmake#function()
 
 	if !l:srcinfo[0]
 		echohl VimMakeWarn|echo 'Cannot make: current buffer file is not in a source directory'|echohl None
-		return
+		return [0, '', '', '']
 	endif
 
 	let root = vimmake#root(l:file)
@@ -53,16 +63,83 @@ function! vimmake#function()
 	if l:filesstr != ''
 		let makefile = vimmake#findmakefile(l:filesstr, l:subpath)
 		let makepath = fnamemodify(l:makefile, ':h')
-		silent !clear
 
-		cd `=l:subpath`
-		silent execute 'make -C"'.l:makepath.'" '.g:vimmake_options
-		redraw!
-		botright cwindow
-		cd `=l:cwd`
-		echohl VimMakeDone|echo 'Compilation completed'|echohl None
+		return [1, l:cwd, l:subpath, l:makepath]
 	else
 		echohl VimMakeWarn|echo 'Cannot make: no Makefile found'|echohl None
+		return [0, '', '', '']
+	endif
+	return [0, '', '', '']
+endfunction()
+
+function! vimmake#function(fmake)
+	if s:tmp_file != ''
+		echohl VimMakeInfo|echo 'Make is already running...'|echohl None
+		return
+	endif
+
+	let info = vimmake#getmakeinfo()
+	let ok = info[0]
+	if l:ok
+		let s:cwd = info[1]
+		let s:subpath = info[2]
+		let makepath = info[3]
+
+		call call(a:fmake, [l:makepath])
+	endif
+endfunction()
+
+function! vimmake#make(makepath)
+		let s:tmp_file = tempname()
+		let makecmd = &makeprg.'>'.s:tmp_file.' 2>&1'
+
+		silent execute '!'.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options
+		redraw!
+
+		call vimmake#done()
+endfunction()
+
+function! vimmake#makev(makepath)
+		cd `=s:subpath`
+		silent execute 'make -C"'.a:makepath.'" '.g:vimmake_options
+		redraw!
+		botright cwindow
+		cd `=s:cwd`
+
+		echohl VimMakeDone|echo 'Compilation completed'|echohl None
+endfunction()
+
+function! vimmake#async(makepath)
+	if len(v:servername) == 0
+		echohl VimMakeWarn|echo "requires a servername (:help --servername)"|echohl None
+		return
+	endif
+
+	let s:tmp_file = tempname()
+	let makecmd = &makeprg.'>'.s:tmp_file.' 2>&1'
+
+	silent execute '!('.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.'; '.s:vimcmd.'>/dev/null)&'
+	redraw!
+
+	echohl VimMakeDone|echo 'Compilation in progress...'|echohl None
+endfunction()
+
+function! vimmake#done()
+	cd `=s:subpath`
+	silent cfile `=s:tmp_file`
+	botright cwindow
+	cd `=s:cwd`
+	let s:last_file = s:tmp_file
+	unlet s:tmp_file
+
+	echohl VimMakeDone|echo 'Compilation completed'|echohl None
+endfunction()
+
+function! vimmake#openlast()
+	if s:last_file != ''
+		edit `=s:last_file`
+	else
+		echohl VimMakeInfo|echo "no last make log"|echohl None
 	endif
 endfunction()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""

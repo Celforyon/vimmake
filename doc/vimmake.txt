@@ -15,7 +15,7 @@ CONTENTS                                                             *vimmake*
 ==============================================================================
 Introduction                                            *vimmake-introduction*
 
-This plugin mainly provides the `:Make` command.
+This plugin mainly provides the `:Make` and `:MakeAsync` commands.
 It simplifies the usage of make by determining where is the Makefile and which
 Makefile is to be utilized whenever multiple are found, depending on the
 file open in the current buffer.
@@ -23,16 +23,46 @@ file open in the current buffer.
 ==============================================================================
 Usage                                                          *vimmake-usage*
 
-The main command is: >
+Available commands: >
 	:Make
+	:MakeV
+	:MakeAsync
+	:MakeLog
 <
-which actually executes: >
-	:call vimmake#function()
-<
+
+MAKE COMMAND                                                            *Make*
+
+Executing `:Make` will synchronously run make for the current project and save
+the log into a temporary file (see |MakeLog|
 
 Possible errors:
 - no Makefile found
 - buffer file not in a valid source directory
+
+MAKEV COMMAND                                                          *MakeV*
+
+Executing `:MakeV` will synchronously run make for the current project and
+output the log in vim
+
+Possible errors:
+- no Makefile found
+- buffer file not in a valid source directory
+
+MAKEASYNC COMMAND                                                  *MakeAsync*
+
+Executing `:MakeAsync` will asynchronously run make for the current project and
+save the log into a temporary file (see |MakeLog|
+
+Requires |--servername| to be set. See |vimmake-requirements|.
+
+Possible errors:
+- no Makefile found
+- buffer file not in a valid source directory
+
+MAKELOG COMMAND                                                      *MakeLog*
+
+Executing `:MakeLog` will open the log file into the current window. Note that
+is does not work for |MakeV|.
 
 ==============================================================================
 Requirements                                            *vimmake-requirements*
@@ -41,12 +71,20 @@ Requirements                                            *vimmake-requirements*
 - file open in the current buffer
 This file must be in one of the subdirectories specified in |g:vimmake_srcdirs|
 
+For |MakeAsync|:
+- |clientserver| support
+- |--servername| set
+For that, you can set an alias like:>
+	alias vim='vim --servername $$'
+<
+
 Optionally:
 - git binaries
 - being in a git repository
 
 ==============================================================================
-Variables          *vimmake-variables* *g:vimmake_options* *g:vimmake_srcdirs*
+Variables                                                  *vimmake-variables*
+											*g:vimmake_options* *g:vimmake_srcdirs* *g:vimmake_vim*
 
 - |g:vimmake_options| (default: '-j4')
 Options to pass to the make program
@@ -54,10 +92,17 @@ Options to pass to the make program
 - |g:vimmake_srcdirs| (default: ['src'])
 List of valid source directories
 
+- |g:vimmake_vim| (default: 'vim')
+vim binary
+
 ==============================================================================
-Highlight                      *vimmake-highlight* *VimMakeDone* *VimMakeWarn*
+Highlight                                                  *vimmake-highlight*
+																		*VimMakeDone* *VimMakeInfo* *VimMakeWarn*
 
 - |VimMakeDone|
+used on make completion
+
+- |VimMakeInfo|
 used for information messages
 
 - |VimMakeWarn|

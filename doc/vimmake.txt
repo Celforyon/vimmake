@@ -3,71 +3,68 @@ vimmake.txt   Utility to simplify usage of make
 Author: Alexis Pereda
 License: GPLv3
 
-==============================================================================
 CONTENTS                                                             *vimmake*
 
-	Introduction  |vimmake-introduction|
-	Usage         |vimmake-usage|
-	Requirements  |vimmake-requirements|
-	Variables     |vimmake-variables|
-	Highlight     |vimmake-highlight|
-	License       |vimmake-license|
+1. Introduction  |vimmake-introduction|
+2. Usage         |vimmake-usage|
+3. Requirements  |vimmake-requirements|
+4. Variables     |vimmake-variables|
+5. Highlight     |vimmake-highlight|
+6. License       |vimmake-license|
 
 ==============================================================================
-                                                        *vimmake-introduction*
-Introduction
+Introduction                                            *vimmake-introduction*
 
-This plugin mainly provides the *Make* command, or *VimMakeFunction* function.
+This plugin mainly provides the `:Make` command, or `VimMakeFunction` function.
 It simplifies the usage of make by determining where is the Makefile and which
 Makefile is to be utilized whenever multiple are found, depending on the
 file open in the current buffer.
 
 ==============================================================================
-                                                               *vimmake-usage*
-Usage
+Usage                                                          *vimmake-usage*
 
-:*Make* will call *VimMakeFunction*.
+The main command is: >
+	:Make
+<
+which actually executes: >
+	:call VimMakeFunction()
+<
 
 Possible errors:
 - no Makefile found
 - buffer file not in a valid source directory
 
 ==============================================================================
-																											  *vimmake-requirements*
-Requirements
+Requirements                                            *vimmake-requirements*
 
 - Makefile or makefile available
 - file open in the current buffer
-This file must be in one of the subdirectories specified in 
-*g:vimmake_srcdirs*
+This file must be in one of the subdirectories specified in |g:vimmake_srcdirs|
 
 Optionally:
 - git binaries
 - being in a git repository
 
 ==============================================================================
-																												   *vimmake-variables*
-Variables
+Variables          *vimmake-variables* *g:vimmake_options* *g:vimmake_srcdirs*
 
-- *g:vimmake_options* (default: '-j4')
+- |g:vimmake_options| (default: '-j4')
 Options to pass to the make program
 
-- *g:vimmake_srcdirs* (default: ['src'])
+- |g:vimmake_srcdirs| (default: ['src'])
 List of valid source directories
 
 ==============================================================================
-																												   *vimmake-highlight*
-Highlight
+Highlight                      *vimmake-highlight* *VimMakeDone* *VimMakeWarn*
 
-- *VimMakeDone*
+- |VimMakeDone|
 used for information messages
 
-- *VimMakeWarn*
+- |VimMakeWarn|
 used for warning messages
 links to WarningMsg
 
 ==============================================================================
-																														 *vimmake-license*
-License
+License                                                      *vimmake-license*
 
 This software is licensed under the GPL v3 license

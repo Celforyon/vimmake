@@ -23,9 +23,9 @@ Simply redo manual installation steps
 
 # Usage
 
-## Make, MakeV
+## Make
 
-The commands `:Make` and `:MakeV` will run the `make` shell command synchronously, the first will log the output to a file (see `MakeLog`), the over will cat the output to vim.
+The commands `:Make` will run the `make` shell command synchronously, displaying it in `vim` and into a log file (see `:MakeLog`)
 
 You can bind it like
 ```
@@ -40,6 +40,11 @@ To be available, you must have the *clientserver* feature enabled in vim, and la
 To ease that, you can define an alias for `vim`:
 ```bash
 alias vim='vim --servername $$'
+```
+
+You can bind it like
+```
+nnoremap <silent> <C-S-b> :MakeAsync<CR>
 ```
 
 ## MakeLog

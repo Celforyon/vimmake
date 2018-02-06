@@ -73,9 +73,11 @@ function! vimmake#getmakeinfo()
 endfunction()
 
 function! vimmake#function(fmake)
-	if s:tmp_file != ''
-		echohl VimMakeInfo|echo 'Make is already running...'|echohl None
-		return
+	if exists('s:tmp_file')
+		if s:tmp_file != ''
+			echohl VimMakeInfo|echo 'Make is already running...'|echohl None
+			return
+		endif
 	endif
 
 	let info = vimmake#getmakeinfo()
@@ -91,22 +93,12 @@ endfunction()
 
 function! vimmake#make(makepath)
 		let s:tmp_file = tempname()
-		let makecmd = &makeprg.'>'.s:tmp_file.' 2>&1'
+		let makecmd = &makeprg.' 2>&1'
 
-		silent execute '!'.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options
+		silent execute '!'.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.'|tee '.s:tmp_file
 		redraw!
 
 		call vimmake#done()
-endfunction()
-
-function! vimmake#makev(makepath)
-		cd `=s:subpath`
-		silent execute 'make -C"'.a:makepath.'" '.g:vimmake_options
-		redraw!
-		botright cwindow
-		cd `=s:cwd`
-
-		echohl VimMakeDone|echo 'Compilation completed'|echohl None
 endfunction()
 
 function! vimmake#async(makepath)

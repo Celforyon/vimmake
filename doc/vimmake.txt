@@ -25,7 +25,6 @@ Usage                                                          *vimmake-usage*
 
 Available commands: >
 	:Make
-	:MakeV
 	:MakeAsync
 	:MakeLog
 <
@@ -33,16 +32,7 @@ Available commands: >
 MAKE COMMAND                                                            *Make*
 
 Executing `:Make` will synchronously run make for the current project and save
-the log into a temporary file (see |MakeLog|
-
-Possible errors:
-- no Makefile found
-- buffer file not in a valid source directory
-
-MAKEV COMMAND                                                          *MakeV*
-
-Executing `:MakeV` will synchronously run make for the current project and
-output the log in vim
+the log into a temporary file (see |MakeLog|)
 
 Possible errors:
 - no Makefile found
@@ -51,7 +41,7 @@ Possible errors:
 MAKEASYNC COMMAND                                                  *MakeAsync*
 
 Executing `:MakeAsync` will asynchronously run make for the current project and
-save the log into a temporary file (see |MakeLog|
+save the log into a temporary file (see |MakeLog|)
 
 Requires |--servername| to be set. See |vimmake-requirements|.
 
@@ -61,8 +51,7 @@ Possible errors:
 
 MAKELOG COMMAND                                                      *MakeLog*
 
-Executing `:MakeLog` will open the log file into the current window. Note that
-is does not work for |MakeV|.
+Executing `:MakeLog` will open the log file into the current window.
 
 ==============================================================================
 Requirements                                            *vimmake-requirements*

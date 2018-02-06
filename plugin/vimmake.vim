@@ -33,7 +33,6 @@ highlight link VimMakeWarn WarningMsg
 """""""""""""""" Commands """""""""""""""""""""""""""""
 
 command! Make :call vimmake#function(function('vimmake#make'))
-command! MakeV :call vimmake#function(function('vimmake#makev'))
 command! MakeAsync :call vimmake#function(function('vimmake#async'))
 command! MakeLog :call vimmake#openlast()
 

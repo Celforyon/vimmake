@@ -10,12 +10,32 @@ let s:vimcmd  = 'vim --servername "'.v:servername.'" --remote-expr "vimmake\#don
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Functions """"""""""""""""""""""""""""
 
+function! vimmake#checkgitdir(dir)
+	call system('(cd '.a:dir.'; git>/dev/null 2>&1 rev-parse --show-toplevel)')
+	return !v:shell_error
+endfunction
+
 function! vimmake#root(file)
+	let cwd = getcwd()
 	let dir = fnamemodify(a:file, ':h')
-	if l:dir == ''
-		return system('(git 2>/dev/null rev-parse --show-toplevel||pwd)|tr -d "\n"')
+
+	if vimmake#checkgitdir(l:cwd)
+		return system('git 2>/dev/null rev-parse --show-toplevel|tr -d "\n"')
+	else
+		for srcdir in g:vimmake_srcdirs
+			while l:dir =~ '/'.l:srcdir.'/' || l:dir =~ '/'.l:srcdir.'$'
+				let dir = fnamemodify(l:dir, ':h')
+			endwhile
+		endfor
+
+		if vimmake#checkgitdir(l:dir)
+			return system('(cd '.l:dir.'; git 2>/dev/null rev-parse --show-toplevel)|tr -d "\n"')
+		else
+			return l:dir
+		endif
 	endif
-	return system('((cd '.l:dir.'; git 2>/dev/null rev-parse --show-toplevel)||pwd)|tr -d "\n"')
+
+	return l:cwd
 endfunction()
 
 function! vimmake#sourceinfo(file)

@@ -16,26 +16,19 @@ function! vimmake#checkgitdir(dir)
 endfunction
 
 function! vimmake#root(file)
-	let cwd = getcwd()
 	let dir = fnamemodify(a:file, ':h')
 
-	if vimmake#checkgitdir(l:cwd)
-		return system('git 2>/dev/null rev-parse --show-toplevel|tr -d "\n"')
+	if vimmake#checkgitdir(l:dir)
+		return system('(cd '.l:dir.'; git 2>/dev/null rev-parse --show-toplevel)|tr -d "\n"')
 	else
 		for srcdir in g:vimmake_srcdirs
 			while l:dir =~ '/'.l:srcdir.'/' || l:dir =~ '/'.l:srcdir.'$'
 				let dir = fnamemodify(l:dir, ':h')
 			endwhile
 		endfor
-
-		if vimmake#checkgitdir(l:dir)
-			return system('(cd '.l:dir.'; git 2>/dev/null rev-parse --show-toplevel)|tr -d "\n"')
-		else
-			return l:dir
-		endif
 	endif
 
-	return l:cwd
+	return l:dir
 endfunction()
 
 function! vimmake#sourceinfo(file)
@@ -133,7 +126,7 @@ function! vimmake#async(makepath)
 	silent execute '!('.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.'; '.s:vimcmd.'>/dev/null)&'
 	redraw!
 
-	echohl VimMakeDone|echo 'Compilation in progress...'|echohl None
+	echohl VimMakeInfo|echo 'Compilation in progress...'|echohl None
 endfunction()
 
 function! vimmake#done()

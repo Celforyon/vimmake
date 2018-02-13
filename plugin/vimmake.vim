@@ -30,6 +30,17 @@ highlight link VimMakeInfo VimMakeInfoDefault
 highlight link VimMakeWarn WarningMsg
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""" Functions """"""""""""""""""""""""""""
+
+function! ProjectRoot(...)
+	let l:file = expand('%:p')
+	if a:0 == 1
+		let l:file = a:1
+	endif
+	return vimmake#root(simplify(l:file))
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Commands """""""""""""""""""""""""""""
 
 command! Make :call vimmake#function(function('vimmake#make'))

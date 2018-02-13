@@ -49,4 +49,8 @@ nnoremap <silent> <C-S-b> :MakeAsync<CR>
 
 ## MakeLog
 
-The command `:MakeLog` will open the last log file into the current buffer
+The command `:MakeLog` will open the last log file into the current buffer.
+
+## ProjectRoot function
+
+The function `ProjectRoot` can be used to get the project root directory as calculated by vimmake.

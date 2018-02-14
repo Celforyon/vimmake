@@ -23,9 +23,13 @@ Simply redo manual installation steps
 
 # Usage
 
+## CMake
+
+The command `:CMake` will touch all CMakeLists.txt files found in the project directory tree. You can use this command before running `:Make` or `:MakeAsync` if project files have been changed and you use globbing in your CMakeLists.txt, for example.
+
 ## Make
 
-The commands `:Make` will run the `make` shell command synchronously, displaying it in `vim` and into a log file (see `:MakeLog`)
+The command `:Make` will run the `make` shell command synchronously, displaying it in `vim` and into a log file (see `:MakeLog`)
 
 You can bind it like
 ```
@@ -44,7 +48,7 @@ alias vim='vim --servername $$'
 
 You can bind it like
 ```
-nnoremap <silent> <C-S-b> :MakeAsync<CR>
+nnoremap <silent> <C-b> :MakeAsync<CR>
 ```
 
 ## MakeLog

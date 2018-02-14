@@ -140,11 +140,30 @@ function! vimmake#done()
 	echohl VimMakeDone|echo 'Compilation completed'|echohl None
 endfunction()
 
-function! vimmake#openlast()
+function! vimmake#log()
 	if s:last_file != ''
-		edit `=s:last_file`
+		pedit `=s:last_file`
+		wincmd P
+		setlocal buftype=nofile bufhidden=hide noswapfile
 	else
 		echohl VimMakeInfo|echo "no last make log"|echohl None
 	endif
 endfunction()
+
+function! vimmake#touchcmakelists()
+	let l:root = vimmake#root(expand('%:p'))
+	let l:cmakelistsfilesstr = globpath(l:root, '**/CMakeLists.txt')
+	let l:cmakelistsfiles = split(l:cmakelistsfilesstr, '\n')
+
+	if l:cmakelistsfilesstr != ''
+		for cmakelistsfile in l:cmakelistsfiles
+			silent execute ':!touch '.l:cmakelistsfile
+		endfor
+		redraw!
+		echohl VimMakeDone|echo 'CMakeLists.txt touched'|echohl None
+	else
+		echohl VimMakeWarn|echo 'No CMakeLists.txt'|echohl None
+		return
+	endif
+endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""

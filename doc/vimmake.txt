@@ -24,10 +24,20 @@ file open in the current buffer.
 Usage                                                          *vimmake-usage*
 
 Available commands: >
+	:CMake
 	:Make
 	:MakeAsync
 	:MakeLog
 <
+
+Available functions: >
+	ProjectRoot()
+<
+
+CMAKE COMMAND                                                          *CMake*
+
+Executing `:CMake` will `touch` all CMakeLists.txt files found in the project
+directory tree.
 
 MAKE COMMAND                                                            *Make*
 
@@ -52,6 +62,11 @@ Possible errors:
 MAKELOG COMMAND                                                      *MakeLog*
 
 Executing `:MakeLog` will open the log file into the current window.
+
+PROJECTROOT FUNCTION                                           *ProjectRoot()*
+
+This function returns the project root directory of the opened file in current
+buffer, or of a file given as the function parameter.
 
 ==============================================================================
 Requirements                                            *vimmake-requirements*

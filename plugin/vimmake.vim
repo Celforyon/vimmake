@@ -45,6 +45,7 @@ endfunction
 
 command! Make :call vimmake#function(function('vimmake#make'))
 command! MakeAsync :call vimmake#function(function('vimmake#async'))
-command! MakeLog :call vimmake#openlast()
+command! MakeLog :call vimmake#log()
+command! CMake :call vimmake#touchcmakelists()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""

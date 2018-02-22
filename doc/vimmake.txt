@@ -50,7 +50,8 @@ Available commands: >
 <
 
 Available functions: >
-  ProjectRoot()
+  ProjectRoot(...)
+  ProjectMakefile()
 <
 
 CMAKE COMMAND                                                          *CMake*
@@ -90,8 +91,13 @@ Executing `:MakeLog` will open the log file into the current window.
 
 PROJECTROOT FUNCTION                                           *ProjectRoot()*
 
-This function returns the project root directory of the opened file in current
-buffer, or of a file given as the function parameter.
+This function returns the project root directory for the opened file in
+current buffer, or for a file given as the function parameter.
+
+PROJECTMAKEFILE FUNCTION                                   *ProjectMakefile()*
+
+This function returns the project Makefile for the opened file in current
+buffer.
 
 ==============================================================================
 Requirements                                            *vimmake-requirements*

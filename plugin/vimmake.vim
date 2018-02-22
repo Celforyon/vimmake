@@ -43,6 +43,10 @@ function! ProjectRoot(...)
 	return vimmake#root(simplify(l:file))
 endfunction
 
+function! ProjectMakefile()
+	return vimmake#makefile()
+endfunction
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Commands """""""""""""""""""""""""""""
 

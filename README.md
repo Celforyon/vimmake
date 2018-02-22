@@ -58,3 +58,7 @@ The command `:MakeLog` will open the last log file into the current buffer.
 ## ProjectRoot function
 
 The function `ProjectRoot` can be used to get the project root directory as calculated by vimmake.
+
+## ProjectMakefile function
+
+The function `ProjectMakefile` can be used to get the project Makefile as calculated by vimmake.

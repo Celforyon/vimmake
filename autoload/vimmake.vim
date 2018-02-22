@@ -11,7 +11,7 @@ let s:vimcmd  = 'vim --servername "'.v:servername.'" --remote-expr "vimmake\#don
 """""""""""""""" Functions """"""""""""""""""""""""""""
 
 function! vimmake#checkgitdir(dir)
-	call system('(cd '.a:dir.'; git>/dev/null 2>&1 rev-parse --show-toplevel)')
+	call system('cd '.a:dir.'; git>/dev/null 2>&1 rev-parse --show-toplevel')
 	return !v:shell_error
 endfunction
 
@@ -19,7 +19,7 @@ function! vimmake#root(file)
 	let l:dir = fnamemodify(a:file, ':h')
 
 	if vimmake#checkgitdir(l:dir)
-		return system('(cd '.l:dir.'; git 2>/dev/null rev-parse --show-toplevel)|tr -d "\n"')
+		return system('cd '.l:dir.'; git 2>/dev/null rev-parse --show-toplevel|tr -d "\n"')
 	else
 		for srcdir in g:vimmake_srcdirs
 			while l:dir =~ '/'.l:srcdir.'/' || l:dir =~ '/'.l:srcdir.'$'

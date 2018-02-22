@@ -6,11 +6,12 @@ License: GPLv3
 CONTENTS                                                             *vimmake*
 
 1. Introduction  |vimmake-introduction|
-2. Usage         |vimmake-usage|
-3. Requirements  |vimmake-requirements|
-4. Variables     |vimmake-variables|
-5. Highlight     |vimmake-highlight|
-6. License       |vimmake-license|
+2. How it works  |vimmake-howitworks|
+3. Usage         |vimmake-usage|
+4. Requirements  |vimmake-requirements|
+5. Variables     |vimmake-variables|
+6. Highlight     |vimmake-highlight|
+7. License       |vimmake-license|
 
 ==============================================================================
 Introduction                                            *vimmake-introduction*
@@ -21,17 +22,35 @@ Makefile is to be utilized whenever multiple are found, depending on the
 file open in the current buffer.
 
 ==============================================================================
+How it works                                              *vimmake-howitworks*
+
+It works with the path of the file open in the current buffer, and a list of
+valid source directories |g:vimmake_srcdirs|.
+
+The project root is:
+- the Git toplevel directory if available
+- the parent directory of the first directory found in |g:vimmake_srcdirs| in
+the file path. Example: your |g:vimmake_srcdirs| is to its default value,
+['src'], and your file path is `/home/foo/project/bar/src/sub/file.c`, then,
+the project root will be `/home/foo/project/bar`.
+
+The chosen Makefile is the nearest found with a glob search from the project
+root. If you have `p/foo/src/file.c` with the root directory being `p/` and
+two Makefiles: `p/Makefile` and `p/foo/Makefile`, the second one is considered
+nearest. If there is no obvious nearest, then the first one is selected.
+
+==============================================================================
 Usage                                                          *vimmake-usage*
 
 Available commands: >
-	:CMake
-	:Make
-	:MakeAsync
-	:MakeLog
+  :CMake
+  :Make
+  :MakeAsync
+  :MakeLog
 <
 
 Available functions: >
-	ProjectRoot()
+  ProjectRoot()
 <
 
 CMAKE COMMAND                                                          *CMake*
@@ -78,8 +97,8 @@ This file must be in one of the subdirectories specified in |g:vimmake_srcdirs|
 For |MakeAsync|:
 - |clientserver| support
 - |--servername| set
-For that, you can set an alias like:>
-	alias vim='vim --servername $$'
+For that, you can set an alias like: >
+  alias vim='vim --servername $$'
 <
 
 Optionally:
@@ -88,7 +107,7 @@ Optionally:
 
 ==============================================================================
 Variables                                                  *vimmake-variables*
-											*g:vimmake_options* *g:vimmake_srcdirs* *g:vimmake_vim*
+                      *g:vimmake_options* *g:vimmake_srcdirs* *g:vimmake_vim*
 
 - |g:vimmake_options| (default: '-j4')
 Options to pass to the make program
@@ -101,7 +120,7 @@ vim binary
 
 ==============================================================================
 Highlight                                                  *vimmake-highlight*
-																		*VimMakeDone* *VimMakeInfo* *VimMakeWarn*
+                                    *VimMakeDone* *VimMakeInfo* *VimMakeWarn*
 
 - |VimMakeDone|
 used on make completion

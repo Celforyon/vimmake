@@ -18,6 +18,9 @@ endif
 if !exists('g:vimmake_vim')
 	let g:vimmake_vim = 'vim'
 endif
+if !exists('g:vimmake_autocloseqf')
+	let g:vimmake_autocloseqf = 0
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Highlights """""""""""""""""""""""""""

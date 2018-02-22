@@ -137,6 +137,10 @@ function! vimmake#done()
 	let s:last_file = s:tmp_file
 	unlet s:tmp_file
 
+	if g:vimmake_autocloseqf
+		nnoremap <buffer><silent> <CR> <CR>:cclose<CR>
+	endif
+
 	echohl VimMakeDone|echo 'Compilation completed'|echohl None
 endfunction()
 

@@ -118,6 +118,9 @@ List of valid source directories
 - |g:vimmake_vim| (default: 'vim')
 vim binary
 
+- |g:vimmake_autocloseqf| (default: 0)
+If set to 1, the QuickFix window will close itself when Enter is hit
+
 ==============================================================================
 Highlight                                                  *vimmake-highlight*
                                     *VimMakeDone* *VimMakeInfo* *VimMakeWarn*

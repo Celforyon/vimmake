@@ -67,7 +67,7 @@ function! vimmake#getmakeinfo()
 
 	if !l:srcinfo[0]
 		echohl VimMakeWarn|echo 'Cannot make: current buffer file is not in a source directory'|echohl None
-		return [0, '', '', '']
+		return [0, '', '', '', '']
 	endif
 
 	let l:root = vimmake#root(l:file)
@@ -77,15 +77,27 @@ function! vimmake#getmakeinfo()
 		let l:makefile = vimmake#findmakefile(l:filesstr, l:subpath)
 		let l:makepath = fnamemodify(l:makefile, ':h')
 
-		return [1, l:cwd, l:subpath, l:makepath]
+		return [1, l:cwd, l:subpath, l:makepath, fnamemodify(l:makefile, ':t')]
 	else
 		echohl VimMakeWarn|echo 'Cannot make: no Makefile found'|echohl None
-		return [0, '', '', '']
+		return [0, '', '', '', '']
 	endif
-	return [0, '', '', '']
+	return [0, '', '', '', '']
 endfunction()
 
-function! vimmake#function(fmake)
+function! vimmake#makefile()
+	let l:info = vimmake#getmakeinfo()
+	let l:ok = info[0]
+	let l:makepath = ''
+	if l:ok
+		let s:cwd = info[1]
+		let s:subpath = info[2]
+		let l:makepath = info[3].'/'.info[4]
+	endif
+	return l:makepath
+endfunction
+
+function! vimmake#function(fmake, ...)
 	if exists('s:tmp_file')
 		if s:tmp_file != ''
 			echohl VimMakeInfo|echo 'Make is already running...'|echohl None
@@ -100,21 +112,21 @@ function! vimmake#function(fmake)
 		let s:subpath = info[2]
 		let l:makepath = info[3]
 
-		call call(a:fmake, [l:makepath])
+		call call(a:fmake, [l:makepath, join(a:000, ' ')])
 	endif
 endfunction()
 
-function! vimmake#make(makepath)
+function! vimmake#make(makepath, options)
 		let s:tmp_file = tempname()
 		let l:makecmd = &makeprg.' 2>&1'
 
-		silent execute '!'.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.'|tee '.s:tmp_file
+		silent execute '!'.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.' '.a:options.'|tee '.s:tmp_file
 		redraw!
 
 		call vimmake#done()
 endfunction()
 
-function! vimmake#async(makepath)
+function! vimmake#async(makepath, options)
 	if len(v:servername) == 0
 		echohl VimMakeWarn|echo "requires a servername (:help --servername)"|echohl None
 		return
@@ -123,7 +135,7 @@ function! vimmake#async(makepath)
 	let s:tmp_file = tempname()
 	let l:makecmd = &makeprg.'>'.s:tmp_file.' 2>&1'
 
-	silent execute '!('.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.'; '.s:vimcmd.'>/dev/null)&'
+	silent execute '!('.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.' '.a:options.'; '.s:vimcmd.'>/dev/null)&'
 	redraw!
 
 	echohl VimMakeInfo|echo 'Compilation in progress...'|echohl None
@@ -169,5 +181,20 @@ function! vimmake#touchcmakelists()
 		echohl VimMakeWarn|echo 'No CMakeLists.txt'|echohl None
 		return
 	endif
+endfunction
+
+function! vimmake#autocomplete_make(arglead, cmdline, cursorpos)
+	let l:makefile = vimmake#makefile()
+	let l:rules = system('cat '.l:makefile.'|grep -E "^[^:. ][^: ]+:"|cut -d":" -f1')
+	let l:rawrulelist = split(l:rules, '\n') + ['VERBOSE=1']
+	let l:rulelist = []
+
+	for rule in l:rawrulelist
+		if l:rule =~ '^'.a:arglead
+			let l:rulelist = l:rulelist + [l:rule]
+		endif
+	endfor
+
+	return l:rulelist
 endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""

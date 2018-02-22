@@ -63,14 +63,20 @@ MAKE COMMAND                                                            *Make*
 Executing `:Make` will synchronously run make for the current project and save
 the log into a temporary file (see |MakeLog|)
 
+All arguments given to `:Make` are given to `make`. There is autocompletion
+for detected Makefile rules and `VERBOSE=1`.
+
 Possible errors:
 - no Makefile found
 - buffer file not in a valid source directory
 
 MAKEASYNC COMMAND                                                  *MakeAsync*
 
-Executing `:MakeAsync` will asynchronously run make for the current project and
-save the log into a temporary file (see |MakeLog|)
+Executing `:MakeAsync` will asynchronously run make for the current project
+and save the log into a temporary file (see |MakeLog|)
+
+All arguments given to `:MakeAsync` are given to `make`. There is
+autocompletion for detected Makefile rules and `VERBOSE=1`.
 
 Requires |--servername| to be set. See |vimmake-requirements|.
 

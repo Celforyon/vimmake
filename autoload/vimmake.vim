@@ -153,7 +153,7 @@ function! vimmake#done()
 		set wrap
 	else
 		set nowrap
-	fi
+	endif
 
 	if g:vimmake_autocloseqf
 		nnoremap <buffer><silent> <CR> <CR>:cclose<CR>

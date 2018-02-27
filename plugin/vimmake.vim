@@ -22,7 +22,7 @@ if !exists('g:vimmake_autocloseqf')
 	let g:vimmake_autocloseqf = 0
 endif
 if !exists('g:vimmake_qfwrap')
-	let g:vimmake_qfwrap = 0
+	let g:vimmake_qfwrap = 1
 endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""

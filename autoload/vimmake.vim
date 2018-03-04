@@ -141,7 +141,7 @@ function! vimmake#async(makepath, options)
 	echohl VimMakeInfo|echo 'Compilation in progress...'|echohl None
 endfunction()
 
-function! vimmake#custom()
+function! vimmake#custom(options)
 	if len(g:vimmake_custom_make) == 0
 		echohl VimMakeWarn|echo "you must define g:vimmake_custom_make"|echohl None
 		return
@@ -150,10 +150,10 @@ function! vimmake#custom()
 	let s:tmp_file = tempname()
 	let l:makecmd = g:vimmake_custom_make.' 2>&1'
 
-	silent execute '!'.l:makecmd.'|tee '.s:tmp_file
+	silent execute '!'.l:makecmd.' '.a:options|tee '.s:tmp_file
 	redraw!
 
-	call vimmake#qfwindow(s:tmp_file)
+	call vimmake#done()
 endfunction()
 
 function! vimmake#qfwindow(file)

@@ -92,6 +92,8 @@ MAKECUSTOM COMMAND                                                *MakeCustom*
 Executing `:MakeCustom` will synchronously run the command in
 |g:vimmake_custom_make| and save the log into a temporary file (see |MakeLog|)
 
+All arguments given to `:MakeCustom` are given to the custom make command.
+
 MAKELOG COMMAND                                                      *MakeLog*
 
 Executing `:MakeLog` will open the log file into the current window.

@@ -153,6 +153,7 @@ function! vimmake#custom(options)
 	silent execute '!'.l:makecmd.' '.a:options.'|tee '.s:tmp_file
 	redraw!
 
+	let s:subpath = ''
 	call vimmake#done()
 endfunction()
 
@@ -172,9 +173,15 @@ function! vimmake#qfwindow(file)
 endfunction()
 
 function! vimmake#done()
-	cd `=s:subpath`
+	if len(s:subpath) != 0
+		cd `=s:subpath`
+	endif
 	call vimmake#qfwindow(s:tmp_file)
-	cd `=s:cwd`
+	if len(s:subpath) != 0
+		cd `=s:cwd`
+		let s:subpath = ''
+	endif
+
 	let s:last_file = s:tmp_file
 	unlet s:tmp_file
 

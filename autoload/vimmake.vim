@@ -150,7 +150,7 @@ function! vimmake#custom()
 	let s:tmp_file = tempname()
 	let l:makecmd = g:vimmake_custom_make.' 2>&1'
 
-	silent execute '!'.l:makecmd|tee '.s:tmp_file
+	silent execute '!'.l:makecmd.'|tee '.s:tmp_file
 	redraw!
 
 	call vimmake#qfwindow(s:tmp_file)

@@ -117,13 +117,13 @@ function! vimmake#function(fmake, ...)
 endfunction()
 
 function! vimmake#make(makepath, options)
-		let s:tmp_file = tempname()
-		let l:makecmd = &makeprg.' 2>&1'
+	let s:tmp_file = tempname()
+	let l:makecmd = &makeprg.' 2>&1'
 
-		silent execute '!'.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.' '.a:options.'|tee '.s:tmp_file
-		redraw!
+	silent execute '!'.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.' '.a:options.'|tee '.s:tmp_file
+	redraw!
 
-		call vimmake#done()
+	call vimmake#done()
 endfunction()
 
 function! vimmake#async(makepath, options)
@@ -141,13 +141,24 @@ function! vimmake#async(makepath, options)
 	echohl VimMakeInfo|echo 'Compilation in progress...'|echohl None
 endfunction()
 
-function! vimmake#done()
-	cd `=s:subpath`
-	silent cfile `=s:tmp_file`
+function! vimmake#custom()
+	if len(g:vimmake_custom_make) == 0
+		echohl VimMakeWarn|echo "you must define g:vimmake_custom_make"|echohl None
+		return
+	endif
+
+	let s:tmp_file = tempname()
+	let l:makecmd = g:vimmake_custom_make.' 2>&1'
+
+	silent execute '!'.l:makecmd|tee '.s:tmp_file
+	redraw!
+
+	call vimmake#qfwindow(s:tmp_file)
+endfunction()
+
+function! vimmake#qfwindow(file)
+	silent cfile `=a:file`
 	botright cwindow
-	cd `=s:cwd`
-	let s:last_file = s:tmp_file
-	unlet s:tmp_file
 
 	if g:vimmake_qfwrap
 		set wrap
@@ -158,6 +169,14 @@ function! vimmake#done()
 	if g:vimmake_autocloseqf
 		nnoremap <buffer><silent> <CR> <CR>:cclose<CR>
 	endif
+endfunction()
+
+function! vimmake#done()
+	cd `=s:subpath`
+	call vimmake#qfwindow(s:tmp_file)
+	cd `=s:cwd`
+	let s:last_file = s:tmp_file
+	unlet s:tmp_file
 
 	echohl VimMakeDone|echo 'Compilation completed'|echohl None
 endfunction()

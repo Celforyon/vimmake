@@ -51,6 +51,11 @@ You can bind it like
 nnoremap <silent> <C-b> :MakeAsync<CR>
 ```
 
+## MakeCustom
+
+The command `:MakeCustom` will run a custom shell command, saving the output into a log file (see `MakeLog`)
+To be available, you must define `g:vimmake_custom_make`.
+
 ## MakeLog
 
 The command `:MakeLog` will open the last log file into the current buffer.

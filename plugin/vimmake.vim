@@ -24,6 +24,9 @@ endif
 if !exists('g:vimmake_qfwrap')
 	let g:vimmake_qfwrap = 1
 endif
+if !exists('g:vimmake_custom_make')
+	let g:vimmake_custom_make = ''
+endif
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Highlights """""""""""""""""""""""""""
@@ -50,11 +53,16 @@ function! ProjectMakefile()
 	return vimmake#makefile()
 endfunction
 
+function! QuickFixWindow(file)
+	return vimmake#qfwindow(a:file)
+endfunction()
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Commands """""""""""""""""""""""""""""
 
 command! -nargs=* -complete=customlist,vimmake#autocomplete_make Make :call vimmake#function(function('vimmake#make'), <q-args>)
 command! -nargs=* -complete=customlist,vimmake#autocomplete_make MakeAsync :call vimmake#function(function('vimmake#async'), <q-args>)
+command! MakeCustom :call vimmake#custom()
 command! MakeLog :call vimmake#log()
 command! CMake :call vimmake#touchcmakelists()
 

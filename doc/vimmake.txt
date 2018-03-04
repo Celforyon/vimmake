@@ -46,12 +46,14 @@ Available commands: >
   :CMake
   :Make
   :MakeAsync
+  :MakeCustom
   :MakeLog
 <
 
 Available functions: >
   ProjectRoot(...)
   ProjectMakefile()
+  QuickFixWindow()
 <
 
 CMAKE COMMAND                                                          *CMake*
@@ -85,6 +87,11 @@ Possible errors:
 - no Makefile found
 - buffer file not in a valid source directory
 
+MAKECUSTOM COMMAND                                                *MakeCustom*
+
+Executing `:MakeCustom` will synchronously run the command in
+|g:vimmake_custom_make| and save the log into a temporary file (see |MakeLog|)
+
 MAKELOG COMMAND                                                      *MakeLog*
 
 Executing `:MakeLog` will open the log file into the current window.
@@ -98,6 +105,10 @@ PROJECTMAKEFILE FUNCTION                                   *ProjectMakefile()*
 
 This function returns the project Makefile for the opened file in current
 buffer.
+
+QUICKFIXWINDOW FUNCTION                                     *QuickFixWindow()*
+
+Open the QuickFix Window if available errors or warnings.
 
 ==============================================================================
 Requirements                                            *vimmake-requirements*
@@ -135,6 +146,9 @@ If set to 1, the QuickFix window will close itself when Enter is hit
 
 - |g:vimmake_qfwrap| (default: 1)
 If set to 1, the QuickFix window will be wrapped
+
+- |g:vimmake_custom_make| (default: '')
+The custom making shell command for |MakeCustom|
 
 ==============================================================================
 Highlight                                                  *vimmake-highlight*

@@ -70,3 +70,26 @@ command! MakeLog :call vimmake#log()
 command! CMake :call vimmake#touchcmakelists()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""" Autocmd """"""""""""""""""""""""""""""
+
+augroup vimmake
+	autocmd!
+augroup end
+
+if g:vimmake_qfwrap
+	augroup vimmake
+		autocmd FileType qf setlocal wrap
+	augroup end
+else
+	augroup vimmake
+		autocmd FileType qf setlocal nowrap
+	augroup end
+endif
+
+if g:vimmake_autocloseqf
+	augroup vimmake
+		autocmd FileType qf nnoremap <buffer><silent> <CR> <CR>:cclose<CR>
+	augroup end
+endif
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""

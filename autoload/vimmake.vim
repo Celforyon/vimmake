@@ -165,16 +165,6 @@ endfunction()
 function! vimmake#qfwindow(file)
 	silent cfile `=a:file`
 	botright cwindow
-
-	if g:vimmake_qfwrap
-		set wrap
-	else
-		set nowrap
-	endif
-
-	if g:vimmake_autocloseqf
-		nnoremap <buffer><silent> <CR> <CR>:cclose<CR>
-	endif
 endfunction()
 
 function! vimmake#done()

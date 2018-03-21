@@ -118,7 +118,7 @@ endfunction()
 
 function! vimmake#make(makepath, options)
 	if g:vimmake_auto_custom_make && len(g:vimmake_custom_make)
-		call vimmake#custom(options)
+		call vimmake#custom(a:options)
 		return
 	endif
 

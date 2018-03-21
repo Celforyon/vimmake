@@ -65,6 +65,8 @@ MAKE COMMAND                                                            *Make*
 
 Executing `:Make` will synchronously run make for the current project and save
 the log into a temporary file (see |MakeLog|)
+It can run a custom shell command if |g:vimmake_auto_custom_make| is set to 1
+and |g:vimmake_custom_make| is set.
 
 All arguments given to `:Make` are given to `make`. There is autocompletion
 for detected Makefile rules and `VERBOSE=1`.
@@ -148,6 +150,9 @@ If set to 1, the QuickFix window will close itself when Enter is hit
 
 - |g:vimmake_qfwrap| (default: 1)
 If set to 1, the QuickFix window will be wrapped
+
+- |g:vimmake_auto_custom_make| (default: 1)
+If |g:vimmake_custom_make| is set, |Make| will use it
 
 - |g:vimmake_custom_make| (default: '')
 The custom making shell command for |MakeCustom|

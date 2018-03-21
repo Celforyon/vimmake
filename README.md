@@ -30,6 +30,7 @@ The command `:CMake` will touch all CMakeLists.txt files found in the project di
 ## Make
 
 The command `:Make` will run the `make` shell command synchronously, displaying it in `vim` and into a log file (see `:MakeLog`)
+It can run a custom shell command if `g:vimmake_auto_custom_make` is set to 1 and `g:vimmake_custom_make` is set.
 
 You can bind it like
 ```

@@ -24,6 +24,9 @@ endif
 if !exists('g:vimmake_qfwrap')
 	let g:vimmake_qfwrap = 1
 endif
+if !exists('g:vimmake_auto_custom_make')
+	let g:vimmake_auto_custom_make = 1
+endif
 if !exists('g:vimmake_custom_make')
 	let g:vimmake_custom_make = ''
 endif

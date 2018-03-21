@@ -117,6 +117,11 @@ function! vimmake#function(fmake, ...)
 endfunction()
 
 function! vimmake#make(makepath, options)
+	if g:vimmake_auto_custom_make && len(g:vimmake_custom_make)
+		vimmake#custom(options)
+		return
+	endif
+
 	let s:tmp_file = tempname()
 	let l:makecmd = &makeprg.' 2>&1'
 

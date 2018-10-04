@@ -47,6 +47,8 @@ To ease that, you can define an alias for `vim`:
 alias vim='vim --servername $$'
 ```
 
+Alternatively, `vim` can be compiled with `autoservername`.
+
 You can bind it like
 ```
 nnoremap <silent> <C-b> :MakeAsync<CR>

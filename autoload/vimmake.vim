@@ -171,7 +171,11 @@ function! vimmake#done()
 	if len(s:subpath) != 0
 		cd `=s:subpath`
 	endif
+
+	let l:view = winsaveview()
 	call vimmake#qfwindow(s:tmp_file)
+	call winrestview(l:view)
+
 	if len(s:subpath) != 0
 		cd `=s:cwd`
 		let s:subpath = ''

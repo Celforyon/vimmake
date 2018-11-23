@@ -1,11 +1,11 @@
 """""""""""""""" Variables """"""""""""""""""""""""""""
 
-let s:tmp_file = ''
-let s:last_file = ''
-let s:cwd = ''
-let s:subpath = ''
-
-let s:vimcmd  = 'vim --servername "'.v:servername.'" --remote-expr "vimmake\#done()"'
+let s:tmp_file    = ''
+let s:last_file   = ''
+let s:cwd         = ''
+let s:subpath     = ''
+let s:pid         = ''
+let s:scriptsdir  = fnamemodify(resolve(expand("<sfile>:p")), ':h:h').'/scripts/'
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Functions """"""""""""""""""""""""""""
@@ -133,18 +133,29 @@ endfunction()
 
 function! vimmake#async(makepath, options)
 	if len(v:servername) == 0
-		echohl VimMakeWarn|echo "requires a servername (:help --servername)"|echohl None
+		echohl VimMakeWarn|echo 'requires a servername (:help --servername)'|echohl None
 		return
 	endif
 
-	let s:tmp_file = tempname()
-	let l:makecmd = &makeprg.'>'.s:tmp_file.' 2>&1'
+	let s:tmp_file  = tempname()
+	let l:cmd = s:scriptsdir.'maker
+				\ '.shellescape(&makeprg).'
+				\ '.shellescape(s:tmp_file).'
+				\ '.shellescape(a:makepath).'
+				\ '.shellescape(g:vimmake_options.' '.a:options).'
+				\ '.shellescape(v:servername).'
+				\ &'
 
-	silent execute '!('.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.' '.a:options.'; '.s:vimcmd.'>/dev/null)&'
+	silent execute '!'.l:cmd
 	redraw!
 
-	echohl VimMakeInfo|echo 'Compilation in progress...'|echohl None
+	echohl VimMakeInfo|echo "Launching compilation command..."|echohl None
 endfunction()
+
+function! vimmake#setpid(pid)
+	let s:pid = a:pid
+	echohl VimMakeInfo|echo '['.s:pid.'] Compilation in progress...'|echohl None
+endfunction
 
 function! vimmake#custom(options)
 	if len(g:vimmake_custom_make) == 0

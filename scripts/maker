@@ -1,0 +1,18 @@
+#!/bin/bash
+
+makeprg="$1"
+log_file="$2"
+makepath="$3"
+makeopts="$4"
+vimservername="$5"
+
+vimexec() {
+	cmd=$1
+	vim>/dev/null 2>&1 --servername "${vimservername}" --remote-expr "${cmd}"
+}
+
+eval "${makeprg}>'${log_file}' 2>&1 -C'${makepath}' ${makeopts}&"
+pid=$!
+vimexec "vimmake#setpid(${pid})"
+wait>/dev/null 2>&1 "${pid}"
+vimexec "vimmake#done()"

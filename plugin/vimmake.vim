@@ -63,11 +63,13 @@ endfunction()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Commands """""""""""""""""""""""""""""
 
-command! -nargs=* -complete=customlist,vimmake#autocomplete_make Make :call vimmake#function(function('vimmake#make'), <q-args>)
-command! -nargs=* -complete=customlist,vimmake#autocomplete_make MakeAsync :call vimmake#function(function('vimmake#async'), <q-args>)
+command! -nargs=* -complete=customlist,vimmake#autocomplete_make Make :call vimmake#function(function('vimmake#make'), 0, <q-args>)
+command! -nargs=* -complete=customlist,vimmake#autocomplete_make -bang MakeAsync :call vimmake#function(function('vimmake#async'), <bang>0, <q-args>)
 command! -nargs=* MakeCustom :call vimmake#custom(<q-args>)
 command! MakeLog :call vimmake#log()
 command! CMake :call vimmake#touchcmakelists()
+
+command! -nargs=* -complete=customlist,vimmake#autocomplete_kill MakeAsyncKill :call vimmake#asynckill(<q-args>)
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Autocmd """"""""""""""""""""""""""""""

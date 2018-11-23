@@ -157,6 +157,19 @@ function! vimmake#setpid(pid)
 	echohl VimMakeInfo|echo '['.s:pid.'] Compilation in progress...'|echohl None
 endfunction
 
+function! vimmake#asynckill(sig)
+	let l:sig = '-15'
+	if a:sig != ''
+		let l:sig = a:sig
+	endif
+
+	if s:pid == ''
+		echohl VimMakeInfo|echo 'No async make command running'|echohl None
+	else
+		call system('kill '.l:sig.' '.s:pid)
+	endif
+endfunction
+
 function! vimmake#custom(options)
 	if len(g:vimmake_custom_make) == 0
 		echohl VimMakeWarn|echo "you must define g:vimmake_custom_make"|echohl None
@@ -179,6 +192,8 @@ function! vimmake#qfwindow(file)
 endfunction()
 
 function! vimmake#done(shell_error)
+	let s:pid = ''
+
 	if len(s:subpath) != 0
 		cd `=s:subpath`
 	endif
@@ -229,6 +244,25 @@ function! vimmake#touchcmakelists()
 		echohl VimMakeWarn|echo 'No CMakeLists.txt'|echohl None
 		return
 	endif
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Autocomplete functions
+function! vimmake#autocomplete_kill(arglead, cmdline, cursorpos)
+	let l:siglist = [
+				\ '-KILL', '-TERM',
+				\ '-SIGKILL', '-SIGTERM',
+				\ '-9', '-15'
+				\	]
+	let l:completelist = []
+
+	for sig in l:siglist
+		if l:sig =~ '^'.a:arglead
+			let l:completelist = l:completelist + [l:sig]
+		endif
+	endfor
+
+	return l:completelist
 endfunction
 
 function! vimmake#autocomplete_make(arglead, cmdline, cursorpos)

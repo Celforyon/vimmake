@@ -100,18 +100,7 @@ function! vimmake#makefile()
 	return l:makepath
 endfunction
 
-function! vimmake#function(fmake, ...)
-	if exists('s:tmp_file')
-		if s:tmp_file != ''
-			" fix "hit enter to continue"
-			let l:cmdheight = &cmdheight
-			set cmdheight=2
-			echohl VimMakeInfo|echo 'Make command already running ('.s:pid.')'|echohl None
-			let &cmdheight = l:cmdheight
-			return
-		endif
-	endif
-
+function! vimmake#function(fmake, bang, ...)
 	let l:info = vimmake#getmakeinfo()
 	let l:ok = info[0]
 	if l:ok
@@ -119,14 +108,16 @@ function! vimmake#function(fmake, ...)
 		let s:subpath = info[2]
 		let l:makepath = info[3]
 
-		call call(a:fmake, [l:makepath, join(a:000, ' ')])
+		call call(a:fmake, [l:makepath, a:bang, join(a:000, ' ')])
 	endif
 endfunction()
 
 """""""""""""""""""""""""""""""""""""""
 """" Make """""""""""""""""""""""""""""
 """""""""""""""""""""""""""""""""""""""
-function! vimmake#make(makepath, options)
+function! vimmake#make(makepath, bang, options)
+	" bang is ignored
+
 	if g:vimmake_auto_custom_make && len(g:vimmake_custom_make)
 		call vimmake#custom(a:options)
 		return
@@ -141,7 +132,22 @@ function! vimmake#make(makepath, options)
 	call vimmake#done(v:shell_error)
 endfunction()
 
-function! vimmake#async(makepath, options)
+function! vimmake#async(makepath, bang, options)
+	if exists('s:tmp_file')
+		if s:tmp_file != ''
+			if a:bang
+				call vimmake#asynckill('-9')
+			else
+				" fix "hit enter to continue"
+				let l:cmdheight = &cmdheight
+				set cmdheight=2
+				echohl VimMakeInfo|echo 'Make command already running ('.s:pid.')'|echohl None
+				let &cmdheight = l:cmdheight
+				return
+			endif
+		endif
+	endif
+
 	if len(v:servername) == 0
 		echohl VimMakeWarn|echo 'requires a servername (:help --servername)'|echohl None
 		return

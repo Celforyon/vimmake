@@ -80,6 +80,9 @@ MAKEASYNC COMMAND                                                  *MakeAsync*
 Executing `:MakeAsync` will asynchronously run make for the current project
 and save the log into a temporary file (see |MakeLog|)
 
+If there is already a running make, it will refuse to launch a new one.
+It can be forced by adding `!` (`:MakeAsync!`).
+
 All arguments given to `:MakeAsync` are given to `make`. There is
 autocompletion for detected Makefile rules and `VERBOSE=1`.
 
@@ -99,6 +102,11 @@ All arguments given to `:MakeCustom` are given to the custom make command.
 MAKELOG COMMAND                                                      *MakeLog*
 
 Executing `:MakeLog` will open the log file into the current window.
+
+MAKEASYNCKILL COMMAND                                          *MakeAsyncKill*
+
+Executing `:MakeAsyncKill` will kill the running async make command.
+An optional argument can be specified to select the signal to send.
 
 PROJECTROOT FUNCTION                                           *ProjectRoot()*
 

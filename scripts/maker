@@ -15,4 +15,5 @@ eval "${makeprg}>'${log_file}' 2>&1 -C'${makepath}' ${makeopts}&"
 pid=$!
 vimexec "vimmake#setpid(${pid})"
 wait>/dev/null 2>&1 "${pid}"
-vimexec "vimmake#done()"
+shell_error=$?
+vimexec "vimmake#done(${shell_error})"

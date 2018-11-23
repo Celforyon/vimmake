@@ -128,7 +128,7 @@ function! vimmake#make(makepath, options)
 	silent execute '!'.l:makecmd.' -C"'.a:makepath.'" '.g:vimmake_options.' '.a:options.'|tee '.s:tmp_file
 	redraw!
 
-	call vimmake#done()
+	call vimmake#done(v:shell_error)
 endfunction()
 
 function! vimmake#async(makepath, options)
@@ -170,7 +170,7 @@ function! vimmake#custom(options)
 	redraw!
 
 	let s:subpath = ''
-	call vimmake#done()
+	call vimmake#done(v:shell_error)
 endfunction()
 
 function! vimmake#qfwindow(file)
@@ -178,7 +178,7 @@ function! vimmake#qfwindow(file)
 	botright cwindow
 endfunction()
 
-function! vimmake#done()
+function! vimmake#done(shell_error)
 	if len(s:subpath) != 0
 		cd `=s:subpath`
 	endif
@@ -186,6 +186,8 @@ function! vimmake#done()
 	let l:view = winsaveview()
 	call vimmake#qfwindow(s:tmp_file)
 	call winrestview(l:view)
+
+	redraw!
 
 	if len(s:subpath) != 0
 		cd `=s:cwd`
@@ -195,7 +197,11 @@ function! vimmake#done()
 	let s:last_file = s:tmp_file
 	unlet s:tmp_file
 
-	echohl VimMakeDone|echo 'Compilation completed'|echohl None
+	if a:shell_error == 0
+		echohl VimMakeDone|echo 'Compilation completed'|echohl None
+	else
+		echohl VimMakeWarn|echo 'Compilation failed ('.a:shell_error.')'|echohl None
+	endif
 endfunction()
 
 function! vimmake#log()

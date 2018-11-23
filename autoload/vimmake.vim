@@ -10,6 +10,9 @@ let s:scriptsdir  = fnamemodify(resolve(expand("<sfile>:p")), ':h:h').'/scripts/
 """""""""""""""""""""""""""""""""""""""""""""""""""""""
 """""""""""""""" Functions """"""""""""""""""""""""""""
 
+"""""""""""""""""""""""""""""""""""""""
+"""" Utility """"""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""
 function! vimmake#checkgitdir(dir)
 	call system('cd '.a:dir.'; git>/dev/null 2>&1 rev-parse --show-toplevel')
 	return !v:shell_error
@@ -100,7 +103,11 @@ endfunction
 function! vimmake#function(fmake, ...)
 	if exists('s:tmp_file')
 		if s:tmp_file != ''
-			echohl VimMakeInfo|echo 'Make is already running...'|echohl None
+			" fix "hit enter to continue"
+			let l:cmdheight = &cmdheight
+			set cmdheight=2
+			echohl VimMakeInfo|echo 'Make command already running ('.s:pid.')'|echohl None
+			let &cmdheight = l:cmdheight
 			return
 		endif
 	endif
@@ -116,6 +123,9 @@ function! vimmake#function(fmake, ...)
 	endif
 endfunction()
 
+"""""""""""""""""""""""""""""""""""""""
+"""" Make """""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""
 function! vimmake#make(makepath, options)
 	if g:vimmake_auto_custom_make && len(g:vimmake_custom_make)
 		call vimmake#custom(a:options)
@@ -186,6 +196,9 @@ function! vimmake#custom(options)
 	call vimmake#done(v:shell_error)
 endfunction()
 
+"""""""""""""""""""""""""""""""""""""""
+"""" Post processing """"""""""""""""""
+"""""""""""""""""""""""""""""""""""""""
 function! vimmake#qfwindow(file)
 	silent cfile `=a:file`
 	botright cwindow
@@ -219,6 +232,9 @@ function! vimmake#done(shell_error)
 	endif
 endfunction()
 
+"""""""""""""""""""""""""""""""""""""""
+"""" Misc """""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""
 function! vimmake#log()
 	if s:last_file != ''
 		pedit `=s:last_file`
@@ -246,8 +262,9 @@ function! vimmake#touchcmakelists()
 	endif
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Autocomplete functions
+"""""""""""""""""""""""""""""""""""""""
+"""" Autocomplete functions """""""""""
+"""""""""""""""""""""""""""""""""""""""
 function! vimmake#autocomplete_kill(arglead, cmdline, cursorpos)
 	let l:siglist = [
 				\ '-KILL', '-TERM',

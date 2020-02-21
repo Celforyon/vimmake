@@ -206,7 +206,7 @@ endfunction()
 """" Post processing """"""""""""""""""
 """""""""""""""""""""""""""""""""""""""
 function! vimmake#qfwindow(file)
-	silent cfile `=a:file`
+	silent cgetfile `=a:file`
 	botright cwindow
 endfunction()
 
@@ -220,6 +220,7 @@ function! vimmake#done(shell_error)
 	let l:view = winsaveview()
 	call vimmake#qfwindow(s:tmp_file)
 	call winrestview(l:view)
+	cnext
 
 	redraw!
 

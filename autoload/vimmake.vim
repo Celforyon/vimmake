@@ -220,6 +220,8 @@ function! vimmake#done(shell_error)
 	let l:view = winsaveview()
 	call vimmake#qfwindow(s:tmp_file)
 	call winrestview(l:view)
+
+	crewind
 	cnext
 
 	redraw!
